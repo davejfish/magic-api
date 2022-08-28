@@ -8,21 +8,6 @@ const mockUser = {
   password: '123456',
 };
 
-// const registerAndLogin = async (props = {}) => {
-//   const testUser = {
-//     ...mockUser,
-//     ...props
-//   };
-
-//   const agent = request.agent(app);
-//   const response = await agent
-//     .post('/api/v1/users')
-//     .send(testUser);
-//   const user = response.body;
-  
-//   return [agent, user];
-// };
-
 describe('backend-express-template routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -39,7 +24,7 @@ describe('backend-express-template routes', () => {
     });
   });
 
-  it('POST /api/v1/users should return user already exists if user', async () => {
+  it('#POST /api/v1/users should return user already exists if user', async () => {
     const response = await request(app).post('/api/v1/users').send({
       email: 'fish@test.com',
       password: '123456',
