@@ -39,6 +39,17 @@ describe('backend-express-template routes', () => {
     });
   });
 
+  it('POST /api/v1/users should return user already exists if user', async () => {
+    const response = await request(app).post('/api/v1/users').send({
+      email: 'fish@test.com',
+      password: '123456',
+    });
+    expect(response.body).toEqual({
+      status: 500,
+      message: 'User already exists'
+    });
+  });
+
   it('#POST /api/v1/users/sessions should sign in an existing user', async () => {
     const response = await request(app).post('/api/v1/users/sessions').send({
       email: 'fish@test.com',
@@ -48,6 +59,14 @@ describe('backend-express-template routes', () => {
     expect(response.body).toEqual({
       message: 'Successfully signed in'
     });
+  });
+
+  it('#POST /api/v1/users/sessions should return an error if user does not exist', async () => {
+    const response = await request(app).post('/api/v1/users/sessions').send({
+      email: 'notReal@fake.com',
+      password: '123456',
+    });
+    expect(response.body).toEqual({ status: 500, message: 'invalid credentials' });
   });
 
 
