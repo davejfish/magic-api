@@ -46,3 +46,8 @@ CREATE TABLE sideboards (
   FOREIGN KEY (deck_id) REFERENCES decks(id),
   FOREIGN KEY (user_id) REFERENCES mtg_users(id)
 );
+
+INSERT INTO mtg_users
+(email, passwordhash)
+VALUES
+('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');

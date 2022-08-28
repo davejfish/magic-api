@@ -39,6 +39,17 @@ describe('backend-express-template routes', () => {
     });
   });
 
+  it('#POST /api/v1/users/sessions should sign in an existing user', async () => {
+    const response = await request(app).post('/api/v1/users/sessions').send({
+      email: 'fish@test.com',
+      password: '123456'
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      message: 'Successfully signed in'
+    });
+  });
+
 
   afterAll(() => {
     pool.end();
