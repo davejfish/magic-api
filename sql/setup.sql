@@ -1,12 +1,10 @@
 -- Use this file to define your SQL tables
 -- The SQL in this file will be executed when you run `npm run setup-db`
 
-DROP TABLE IF EXISTS sideboards;
 DROP TABLE IF EXISTS mtg_cards;
+DROP TABLE IF EXISTS sideboards;
 DROP TABLE IF EXISTS decks;
 DROP TABLE IF EXISTS mtg_users;
-
-
 
 CREATE TABLE mtg_users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -23,9 +21,18 @@ CREATE TABLE decks (
   FOREIGN KEY (uid) REFERENCES mtg_users(id)
 );
 
-CREATE TABLE mtg_cards (
+CREATE TABLE sideboards (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   deck_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (deck_id) REFERENCES decks(id),
+  FOREIGN KEY (user_id) REFERENCES mtg_users(id)
+);
+
+CREATE TABLE mtg_cards (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  deck_id BIGINT,
+  sideboard_id BIGINT,
   name TEXT NOT NULL,
   type_line TEXT,
   oracle_text TEXT,
@@ -36,15 +43,8 @@ CREATE TABLE mtg_cards (
   legalities TEXT,
   set_name TEXT,
   prices TEXT,
-  FOREIGN KEY (deck_id) REFERENCES decks(id)
-);
-
-CREATE TABLE sideboards (
-  id BIGINT GENERATED ALWAYS AS IDENTITY,
-  deck_id BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
   FOREIGN KEY (deck_id) REFERENCES decks(id),
-  FOREIGN KEY (user_id) REFERENCES mtg_users(id)
+  FOREIGN KEY (sideboard_id) REFERENCES sideboards(id)
 );
 
 INSERT INTO mtg_users
