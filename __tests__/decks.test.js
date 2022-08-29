@@ -54,7 +54,7 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it(`#GET /api/v1/decks should return a list of decks for the user
+  it(`#GET /api/v1/decks/user-decks should return a list of decks for the user
     if they are signed in`, async () => {
     const [agent, user] = await registerAndLogin();
     await Promise.all([
@@ -62,7 +62,7 @@ describe('backend deck route tests', () => {
       agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'super deck' }),
       agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'SUPER SAMURAI DECK' }),
     ]);
-    const response = await agent.get('/api/v1/decks');
+    const response = await agent.get('/api/v1/decks/user-decks');
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(3);
     expect(response.body[0]).toEqual({
@@ -73,11 +73,33 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it('#GET /api/v1/decks should return 401 if not signed in', async () => {
-    const response = await request(app).get('/api/v1/decks');
+  it('#GET /api/v1/decks/user-decks should return 401 if not signed in', async () => {
+    const response = await request(app).get('/api/v1/decks/user-decks');
     expect(response.body).toEqual({
       status: 401,
       message: 'You must be signed in to continue',
+    });
+  });
+
+  it('#GET /api/v1/decks should return all decks', async () => {
+    const [agent] = await registerAndLogin();
+    await agent.post('/api/v1/decks/create').send(testDeck);
+
+    const response = await request(app).get('/api/v1/decks');
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(1);
+  });
+
+  it('#GET /api/v1/decks/:id should return a specific deck', async () => {
+    const [agent] = await registerAndLogin();
+    await agent.post('/api/v1/decks/create').send(testDeck);
+
+    const response = await request(app).get('/api/v1/decks/1');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      ...testDeck,
+      id: '1',
+      uid: expect.any(String),
     });
   });
 
