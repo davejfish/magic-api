@@ -24,7 +24,7 @@ CREATE TABLE decks (
 );
 
 CREATE TABLE mtg_cards (
-  id BIGINT GENERATED ALWAYS AS IDENTITY,
+  card_id BIGINT GENERATED ALWAYS AS IDENTITY,
   sk_id varchar not null PRIMARY KEY,
   name TEXT NOT NULL,
   type_line TEXT,
@@ -52,4 +52,3 @@ INSERT INTO mtg_users
 (email, passwordhash)
 VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
-
