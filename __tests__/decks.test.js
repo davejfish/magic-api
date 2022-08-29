@@ -10,21 +10,20 @@ const mockUser = {
 
 const testDeck = {
   rule_set: 'standard',
-  name: 'SAMURAI DECK'
+  name: 'SAMURAI DECK',
+  legal: true,
 };
 
 const registerAndLogin = async (props = {}) => {
   const testUser = {
     ...mockUser,
-    ...props
+    ...props,
   };
 
   const agent = request.agent(app);
-  const response = await agent
-    .post('/api/v1/users')
-    .send(testUser);
+  const response = await agent.post('/api/v1/users').send(testUser);
   const user = response.body;
-  
+
   return [agent, user];
 };
 
@@ -33,7 +32,6 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
     const [agent, user] = await registerAndLogin();
     const response = await agent.post('/api/v1/decks/create').send(testDeck);
@@ -46,11 +44,13 @@ describe('backend deck route tests', () => {
   });
 
   it('#POST /api/v1/decks/create should return 401 if not signed in', async () => {
-    const response = await request(app).post('/api/v1/decks/create').send(testDeck);
+    const response = await request(app)
+      .post('/api/v1/decks/create')
+      .send(testDeck);
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       status: 401,
-      message: 'You must be signed in to continue'
+      message: 'You must be signed in to continue',
     });
   });
 
@@ -59,8 +59,12 @@ describe('backend deck route tests', () => {
     const [agent, user] = await registerAndLogin();
     await Promise.all([
       agent.post('/api/v1/decks/create').send(testDeck),
-      agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'super deck' }),
-      agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'SUPER SAMURAI DECK' }),
+      agent
+        .post('/api/v1/decks/create')
+        .send({ ...testDeck, name: 'super deck' }),
+      agent
+        .post('/api/v1/decks/create')
+        .send({ ...testDeck, name: 'SUPER SAMURAI DECK' }),
     ]);
     const response = await agent.get('/api/v1/decks/user-decks');
     expect(response.status).toBe(200);
@@ -70,6 +74,7 @@ describe('backend deck route tests', () => {
       uid: user.id,
       name: expect.any(String),
       rule_set: 'standard',
+      legal: true,
     });
   });
 
@@ -101,6 +106,19 @@ describe('backend deck route tests', () => {
       id: '1',
       uid: expect.any(String),
     });
+  });
+
+  it('#PUT /api/v1/decks/:id updates a users deck', async () => {
+    const [agent] = await registerAndLogin();
+    const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(sendDeck.status).toBe(200);
+
+    const response = await agent
+      .put(`/api/v1/decks/${sendDeck.body.id}`)
+      .send({ name: 'Ninja Deck' });
+    console.log('test ------>', response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.name).toEqual('Ninja Deck');
   });
 
   afterAll(() => {
