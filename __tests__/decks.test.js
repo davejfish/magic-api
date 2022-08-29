@@ -8,7 +8,11 @@ const mockUser = {
   password: '123456',
 };
 
-// eslint-disable-next-line no-unused-vars
+const testDeck = {
+  rule_set: 'standard',
+  name: 'SAMURAI DECK'
+};
+
 const registerAndLogin = async (props = {}) => {
   const testUser = {
     ...mockUser,
@@ -24,14 +28,30 @@ const registerAndLogin = async (props = {}) => {
   return [agent, user];
 };
 
-describe('backend-express-template routes', () => {
+describe('backend deck route tests', () => {
   beforeEach(() => {
     return setup(pool);
   });
 
   
-  it('basic test', async () => {
-    expect(1).toEqual(1);
+  it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const response = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      uid: user.id,
+      ...testDeck,
+    });
+  });
+
+  it('#POST /api/v1/decks/create should return 401 if not signed in', async () => {
+    const response = await request(app).post('/api/v1/decks/create').send(testDeck);
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      status: 401,
+      message: 'You must be signed in to continue'
+    });
   });
 
   afterAll(() => {
