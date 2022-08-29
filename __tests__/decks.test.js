@@ -54,6 +54,25 @@ describe('backend deck route tests', () => {
     });
   });
 
+  it(`#GET /api/v1/decks should return a list of decks for the user
+    if they are signed in`, async () => {
+    const [agent, user] = await registerAndLogin();
+    await Promise.all([
+      agent.post('/api/v1/decks/create').send(testDeck),
+      agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'super deck' }),
+      agent.post('/api/v1/decks/create').send({ ...testDeck, name: 'SUPER SAMURAI DECK' }),
+    ]);
+    const response = await agent.get('/api/v1/decks');
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(3);
+    expect(response.body[0]).toEqual({
+      id: expect.any(String),
+      uid: user.id,
+      name: expect.any(String),
+      rule_set: 'standard',
+    });
+  });
+
   afterAll(() => {
     pool.end();
   });
