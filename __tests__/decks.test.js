@@ -121,6 +121,19 @@ describe('backend deck route tests', () => {
     expect(response.body.name).toEqual('Ninja Deck');
   });
 
+  it.only('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
+    const [agent] = await registerAndLogin();
+    const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(sendDeck.status).toBe(200);
+
+    let response = await agent.delete(`/api/v1/decks/${sendDeck.body.id}`);
+    expect(response.status).toBe(200);
+    console.log('line 131', response.body);
+    response = await agent.get(`/api/v1/decks/${sendDeck.body.id}`);
+    console.log('line 133', response.body);
+    expect(response.status).toBe(404);
+  });
+
   afterAll(() => {
     pool.end();
   });
