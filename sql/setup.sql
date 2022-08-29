@@ -47,8 +47,3 @@ CREATE TABLE decks_cards (
   FOREIGN KEY (sk_id) REFERENCES mtg_cards(sk_id),
   FOREIGN KEY (deck_id) REFERENCES decks(id)
 );
-
-INSERT INTO mtg_users
-(email, passwordhash)
-VALUES
-('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
