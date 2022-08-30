@@ -30,7 +30,7 @@ const registerAndLogin = async (props = {}) => {
   
 
 describe('backend-express-template routes', () => {
-  beforeEach(() => {gi
+  beforeEach(() => {
     return setup(pool);
   });
 

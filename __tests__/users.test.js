@@ -54,6 +54,13 @@ describe('backend-express-template routes', () => {
     expect(response.body).toEqual({ status: 500, message: 'invalid credentials' });
   });
 
+  it('delete user session(logout)', async () => {
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
+    const resp = await agent
+      .delete('/api/v1/users/sessions');
+    expect(resp.status).toBe(204);
+  });
 
   afterAll(() => {
     pool.end();
