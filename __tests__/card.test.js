@@ -56,7 +56,7 @@ describe('backend-express-template routes', () => {
     expect(response.status).toBe(200);
     const getCard = await agent.get('/api/v1/cards/f295b713-1d6a-43fd-910d-fb35414bf58a');
     expect(getCard.status).toBe(200);
-});
+  });
 
 
   it('Should delete a card from a deck', async () => {

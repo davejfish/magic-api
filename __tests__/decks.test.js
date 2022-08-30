@@ -8,6 +8,11 @@ const mockUser = {
   password: '123456',
 };
 
+const mockUser2 = {
+  email: 'test2@example.com',
+  password: '234567',
+};
+
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
@@ -92,20 +97,39 @@ describe('backend deck route tests', () => {
 
     const response = await request(app).get('/api/v1/decks');
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBe(2);
   });
 
   it('#GET /api/v1/decks/:id should return a specific deck', async () => {
     const [agent] = await registerAndLogin();
     await agent.post('/api/v1/decks/create').send(testDeck);
 
-    const response = await request(app).get('/api/v1/decks/1');
+    const response = await request(app).get('/api/v1/decks/2');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       ...testDeck,
-      id: '1',
+      id: '2',
       uid: expect.any(String),
     });
+  });
+
+  it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
+    const [agent] = await registerAndLogin();
+    await agent.post('/api/v1/decks/create').send(testDeck);
+    
+    let card = await fetch('https://api.scryfall.com/cards/35a236f7-f008-4eb8-91d9-31ea8589cf0c');
+    card = await card.json();
+    await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
+
+    card = await fetch('https://api.scryfall.com/cards/e5b2176d-8925-4474-9d3e-1c97192715fb');
+    card = await card.json();
+    await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
+
+    const response = await agent.get('/api/v1/decks/decks-cards/2');
+
+    expect(response.status).toBe(200);
+    expect(response.body.cards.length).toBe(2);
+
   });
 
   it('#PUT /api/v1/decks/:id updates a users deck', async () => {
@@ -116,9 +140,37 @@ describe('backend deck route tests', () => {
     const response = await agent
       .put(`/api/v1/decks/${sendDeck.body.id}`)
       .send({ name: 'Ninja Deck' });
-    console.log('test ------>', response.body);
+
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual('Ninja Deck');
+  });
+
+  it('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
+    const [agent] = await registerAndLogin();
+    const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(sendDeck.status).toBe(200);
+
+    let response = await agent.delete(`/api/v1/decks/${sendDeck.body.id}`);
+    expect(response.status).toBe(200);
+
+    response = await agent.get(`/api/v1/decks/${sendDeck.body.id}`);
+    expect(response.body).toBe(null);
+  });
+
+  it('#DELETE /api/v1/decks/:id returns a 403 to an unauthorized user', async () => {
+    const [agent] = await registerAndLogin();
+
+    const agent2 = request.agent(app);
+    const secondLogin = await agent2.post('/api/v1/users').send(mockUser2);
+
+    expect(secondLogin.status).toBe(200);
+
+    const newDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(newDeck.status).toBe(200);
+
+    const response = await agent2.delete(`/api/v1/decks/${newDeck.body.id}`);
+
+    expect(response.status).toBe(403);
   });
 
   afterAll(() => {
