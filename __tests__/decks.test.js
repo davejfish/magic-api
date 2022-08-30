@@ -97,20 +97,39 @@ describe('backend deck route tests', () => {
 
     const response = await request(app).get('/api/v1/decks');
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBe(2);
   });
 
   it('#GET /api/v1/decks/:id should return a specific deck', async () => {
     const [agent] = await registerAndLogin();
     await agent.post('/api/v1/decks/create').send(testDeck);
 
-    const response = await request(app).get('/api/v1/decks/1');
+    const response = await request(app).get('/api/v1/decks/2');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       ...testDeck,
-      id: '1',
+      id: '2',
       uid: expect.any(String),
     });
+  });
+
+  it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
+    const [agent] = await registerAndLogin();
+    await agent.post('/api/v1/decks/create').send(testDeck);
+    
+    let card = await fetch('https://api.scryfall.com/cards/35a236f7-f008-4eb8-91d9-31ea8589cf0c');
+    card = await card.json();
+    await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
+
+    card = await fetch('https://api.scryfall.com/cards/e5b2176d-8925-4474-9d3e-1c97192715fb');
+    card = await card.json();
+    await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
+
+    const response = await agent.get('/api/v1/decks/decks-cards/2');
+
+    expect(response.status).toBe(200);
+    expect(response.body.cards.length).toBe(2);
+
   });
 
   it('#PUT /api/v1/decks/:id updates a users deck', async () => {
