@@ -39,12 +39,13 @@ describe('backend-express-template routes', () => {
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
     let card = await fetch(
-      'https://api.scryfall.com/cards/7e81853c-d0c0-40bc-80fc-13a5964878b2'
+      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
     );
     card = await card.json();
     const response = await agent
       .post('/api/v1/cards/addCard/1')
       .send({ card, sideboard: true });
+    console.log('test ----->', response.body);
     expect(response.status).toBe(200);
   });
 
@@ -53,7 +54,7 @@ describe('backend-express-template routes', () => {
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
     let card = await fetch(
-      'https://api.scryfall.com/cards/f295b713-1d6a-43fd-910d-fb35414bf58a'
+      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
     );
     card = await card.json();
     const response = await agent
@@ -61,7 +62,7 @@ describe('backend-express-template routes', () => {
       .send({ card, sideboard: true });
     expect(response.status).toBe(200);
     const getCard = await agent.get(
-      '/api/v1/cards/f295b713-1d6a-43fd-910d-fb35414bf58a'
+      '/api/v1/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
     );
     expect(getCard.status).toBe(200);
   });
@@ -71,15 +72,16 @@ describe('backend-express-template routes', () => {
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
     let card = await fetch(
-      'https://api.scryfall.com/cards/f295b713-1d6a-43fd-910d-fb35414bf58a'
+      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
     );
     card = await card.json();
     const response = await agent
       .post('/api/v1/cards/addCard/1')
       .send({ card, sideboard: true });
+
     expect(response.status).toBe(200);
     const deleteFromDeck = await agent.delete(
-      '/api/v1/cards/f295b713-1d6a-43fd-910d-fb35414bf58a/1'
+      '/api/v1/cards/3bd81ae6-e628-447a-a36b-597e63ede295/1'
     );
     expect(deleteFromDeck.status).toBe(200);
   });
