@@ -52,8 +52,3 @@ INSERT INTO mtg_users
 (email, passwordhash)
 VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
-
--- INSERT INTO mtg_cards 
--- (sk_id, name, type_line, oracle_text, image_uri, mana_cost, cmc, colors, legalities, set_name, prices)
--- VALUES
--- ('142c5b67-5de9-41da-b57f-7ce771457a3e', 'Ascendant Packleader, ')

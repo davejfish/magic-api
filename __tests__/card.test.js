@@ -46,7 +46,6 @@ describe('backend-express-template routes', () => {
       .post('/api/v1/cards/addCard/1')
       .send({ card, sideboard: true });
     expect(response.status).toBe(200);
-    console.log(response.body);
   });
 
   it('get a cards details', async () => {
