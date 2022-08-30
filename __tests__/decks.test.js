@@ -8,6 +8,11 @@ const mockUser = {
   password: '123456',
 };
 
+const mockUser2 = {
+  email: 'test2@example.com',
+  password: '234567',
+};
+
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
@@ -116,22 +121,37 @@ describe('backend deck route tests', () => {
     const response = await agent
       .put(`/api/v1/decks/${sendDeck.body.id}`)
       .send({ name: 'Ninja Deck' });
-    console.log('test ------>', response.body);
+
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual('Ninja Deck');
   });
 
-  it.only('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
+  it('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
 
     let response = await agent.delete(`/api/v1/decks/${sendDeck.body.id}`);
     expect(response.status).toBe(200);
-    console.log('line 131', response.body);
+
     response = await agent.get(`/api/v1/decks/${sendDeck.body.id}`);
-    console.log('line 133', response.body);
-    expect(response.status).toBe(404);
+    expect(response.body).toBe(null);
+  });
+
+  it('#DELETE /api/v1/decks/:id returns a 403 to an unauthorized user', async () => {
+    const [agent] = await registerAndLogin();
+
+    const agent2 = request.agent(app);
+    const secondLogin = await agent2.post('/api/v1/users').send(mockUser2);
+
+    expect(secondLogin.status).toBe(200);
+
+    const newDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(newDeck.status).toBe(200);
+
+    const response = await agent2.delete(`/api/v1/decks/${newDeck.body.id}`);
+
+    expect(response.status).toBe(403);
   });
 
   afterAll(() => {
