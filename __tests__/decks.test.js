@@ -85,9 +85,12 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it.only('#testing utls', async () => {
-    const response = checkRules('standard', ['test cards for loop']);
-    console.log(response);
+  it('#testing utls', async () => {
+    const deck = { rule_set: 'standard', id: '1' };
+    const response = await checkRules(deck);
+    expect(response).toEqual({
+      message: 'Deck is legal.'
+    });
   });
 });
 
