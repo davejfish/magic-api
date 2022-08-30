@@ -143,6 +143,8 @@ it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
 
 });
 
+
+
 it('#PUT /api/v1/decks/:id updates a users deck', async () => {
   const [agent] = await registerAndLogin();
   const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
@@ -178,6 +180,7 @@ it('#DELETE /api/v1/decks/:id returns a 403 to an unauthorized user', async () =
 
   const newDeck = await agent.post('/api/v1/decks/create').send(testDeck);
   expect(newDeck.status).toBe(200);
+  console.log(newDeck.body);
 
   const response = await agent2.delete(`/api/v1/decks/${newDeck.body.id}`);
 
