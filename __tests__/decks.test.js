@@ -85,7 +85,7 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it.only('#testing utls', async () => {
+  it('#testing utls', async () => {
     const response = checkRules('standard', ['test cards for loop']);
     console.log(response);
   });
@@ -134,7 +134,6 @@ it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
   await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
 
   const response = await agent.get('/api/v1/decks/decks-cards/2');
-
   expect(response.status).toBe(200);
   expect(response.body.cards.length).toBe(2);
 
