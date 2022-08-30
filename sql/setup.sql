@@ -52,3 +52,29 @@ INSERT INTO mtg_users
 (email, passwordhash)
 VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
+
+
+
+INSERT INTO mtg_cards
+(sk_id, name, type_line, 
+oracle_text, image_uri, mana_cost, 
+cmc, colors, legalities, set_name, prices)
+VALUES
+('test', 'test', 'test', 'test', 'test', 'test',
+'test', 'test', 'test', 'test', 'test'),
+('test2', 'test2', 'test2', 'test2', 'test2', 'test2',
+'test2', 'test2', 'test2', 'test2', 'test2');
+
+INSERT INTO decks
+(uid, rule_set, name, legal)
+VALUES
+('1', 'standard', 'daves deck', true);
+
+INSERT INTO decks_cards
+(uid, sk_id, deck_id, sideboard)
+VALUES
+('1', 'test', '1', false),
+('1', 'test2', '1', false),
+('1', 'test', '1', false);
+
+
