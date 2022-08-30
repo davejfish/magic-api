@@ -151,19 +151,10 @@ describe('backend deck route tests', () => {
 
   });
 
-<<<<<<< HEAD
-
-
-it('#PUT /api/v1/decks/:id updates a users deck', async () => {
-  const [agent] = await registerAndLogin();
-  const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-  expect(sendDeck.status).toBe(200);
-=======
   it('#PUT /api/v1/decks/:id updates a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
->>>>>>> 4dbc2a717492b4290033cc074aa1a414ab012ef0
 
     const response = await agent
       .put(`/api/v1/decks/${sendDeck.body.id}`)
@@ -193,14 +184,8 @@ it('#PUT /api/v1/decks/:id updates a users deck', async () => {
 
     expect(secondLogin.status).toBe(200);
 
-<<<<<<< HEAD
-  const newDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-  expect(newDeck.status).toBe(200);
-  console.log(newDeck.body);
-=======
     const newDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(newDeck.status).toBe(200);
->>>>>>> 4dbc2a717492b4290033cc074aa1a414ab012ef0
 
     const response = await agent2.delete(`/api/v1/decks/${newDeck.body.id}`);
 
