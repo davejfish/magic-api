@@ -53,8 +53,6 @@ INSERT INTO mtg_users
 VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
 
-<<<<<<< HEAD
-=======
 
 
 INSERT INTO mtg_cards
@@ -62,8 +60,9 @@ INSERT INTO mtg_cards
 oracle_text, image_uri, mana_cost, 
 cmc, colors, legalities, set_name, prices)
 VALUES
-('test', 'test', 'test', 'test', 'test', 'test',
-'test', 'test', 'test', 'test', 'test'),
+('142c5b67-5de9-41da-b57f-7ce771457a3e', 'Ascendant Packleader', 'Creature — Wolf', 'Ascendant Packleader enters the battlefield with a +1/+1 counter on it if you control a permanent with mana value 4 or greater.
+Whenever you cast a spell with mana value 4 or greater, put a +1/+1 counter on Ascendant Packleader.', '{"standard":"legal","future":"legal","historic":"legal","gladiator":"legal","pioneer":"legal","explorer":"legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"not_legal","commander":"legal","brawl":"legal","historicbrawl":"legal","alchemy":"legal","paupercommander":"not_legal","duel":"legal","oldschool":"not_legal","premodern":"not_legal"}', '{G}',
+'1', '{"G"}', '{"standard":"legal","future":"legal","historic":"legal","gladiator":"legal","pioneer":"legal","explorer":"legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"not_legal","commander":"legal","brawl":"legal","historicbrawl":"legal","alchemy":"legal","paupercommander":"not_legal","duel":"legal","oldschool":"not_legal","premodern":"not_legal"}', 'Innistrad: Crimson Vow', '{"usd":"0.55","usd_foil":"0.65","usd_etched":null,"eur":"0.75","eur_foil":"0.50","tix":"0.14"}'),
 ('test2', 'test2', 'test2', 'test2', 'test2', 'test2',
 'test2', 'test2', 'test2', 'test2', 'test2');
 
@@ -75,9 +74,8 @@ VALUES
 INSERT INTO decks_cards
 (uid, sk_id, deck_id, sideboard)
 VALUES
-('1', 'test', '1', false),
+('1', '142c5b67-5de9-41da-b57f-7ce771457a3e', '1', false),
 ('1', 'test2', '1', false),
-('1', 'test', '1', false);
+('1', '142c5b67-5de9-41da-b57f-7ce771457a3e', '1', false);
 
 
->>>>>>> 5e72d3eb82cb74b70b2b92af6285c002b4d898f1
