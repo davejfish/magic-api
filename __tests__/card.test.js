@@ -30,7 +30,7 @@ const registerAndLogin = async (props = {}) => {
   
 
 describe('backend-express-template routes', () => {
-  beforeEach(() => {
+  beforeEach(() => {gi
     return setup(pool);
   });
 
@@ -44,7 +44,6 @@ describe('backend-express-template routes', () => {
     card = await card.json();
     const response = await agent.post('/api/v1/cards/addCard/1').send({ card, sideboard: true });
     expect(response.status).toBe(200);
-    console.log(response.body);
   });
 
   it('get a cards details', async () => {
