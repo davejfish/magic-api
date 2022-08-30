@@ -73,4 +73,5 @@ INSERT INTO decks_cards
 (uid, sk_id, deck_id, sideboard)
 VALUES
 ('1', 'test', '1', false),
-('1', 'test2', '1', false);
+('1', 'test2', '1', false),
+('1', 'test', '1', false);

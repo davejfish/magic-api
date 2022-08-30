@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const fetch = require('cross-fetch');
+const checkRules = require('../lib/utils/utils.js');
 
 const mockUser = {
   email: 'test@example.com',
@@ -36,6 +37,14 @@ const registerAndLogin = async (props = {}) => {
 describe('backend deck route tests', () => {
   beforeEach(() => {
     return setup(pool);
+  });
+
+  it('#testing utls', async () => {
+    const deck = { rule_set: 'standard', id: '1' };
+    const response = await checkRules(deck);
+    expect(response).toEqual({
+      message: 'Deck is legal.'
+    });
   });
 
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
