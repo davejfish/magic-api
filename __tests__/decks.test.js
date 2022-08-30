@@ -5,8 +5,6 @@ const app = require('../lib/app');
 const fetch = require('cross-fetch');
 const checkRules = require('../lib/utils/utils.js');
 
-const fetch = require('cross-fetch');
-const checkRules = require('../lib/utils/utils.js');
 
 
 const mockUser = {
@@ -198,7 +196,3 @@ describe('backend deck route tests', () => {
     pool.end();
   });
 });
-
-
-
-
