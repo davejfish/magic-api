@@ -5,6 +5,10 @@ const app = require('../lib/app');
 const fetch = require('cross-fetch');
 const checkRules = require('../lib/utils/utils.js');
 
+const fetch = require('cross-fetch');
+const checkRules = require('../lib/utils/utils.js');
+
+
 const mockUser = {
   email: 'test@example.com',
   password: '123456',
@@ -93,6 +97,14 @@ describe('backend deck route tests', () => {
     });
   });
 
+  it('#testing utls', async () => {
+    const deck = { rule_set: 'standard', id: '1' };
+    const response = await checkRules(deck);
+    expect(response).toEqual({
+      message: 'Deck is legal.'
+    });
+  });
+
   it('#GET /api/v1/decks/user-decks should return 401 if not signed in', async () => {
     const response = await request(app).get('/api/v1/decks/user-decks');
     expect(response.body).toEqual({
@@ -126,7 +138,7 @@ describe('backend deck route tests', () => {
   it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
     await agent.post('/api/v1/decks/create').send(testDeck);
-    
+      
     let card = await fetch('https://api.scryfall.com/cards/35a236f7-f008-4eb8-91d9-31ea8589cf0c');
     card = await card.json();
     await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
@@ -136,7 +148,6 @@ describe('backend deck route tests', () => {
     await agent.post('/api/v1/cards/addCard/2').send({ card, sideboard: false });
 
     const response = await agent.get('/api/v1/decks/decks-cards/2');
-
     expect(response.status).toBe(200);
     expect(response.body.cards.length).toBe(2);
 
@@ -187,3 +198,7 @@ describe('backend deck route tests', () => {
     pool.end();
   });
 });
+
+
+
+

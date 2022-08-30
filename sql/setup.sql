@@ -54,6 +54,7 @@ VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
 
 
+
 INSERT INTO mtg_cards
 (sk_id, name, type_line, 
 oracle_text, image_uri, mana_cost, 
