@@ -54,6 +54,33 @@ describe('backend-express-template routes', () => {
     expect(response.body).toEqual({ status: 500, message: 'invalid credentials' });
   });
 
+  it('delete user session(logout)', async () => {
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
+    const resp = await agent
+      .delete('/api/v1/users/sessions');
+    expect(resp.status).toBe(204);
+  });
+
+  it('returns the current user', async () => {
+    const agent = request.agent(app);
+    const response = await agent.post('/api/v1/users').send(mockUser);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      username: null,
+      email: 'test@example.com'
+    });
+    const me = await agent.get('/api/v1/users/me');
+    expect(me.body).toEqual({
+      email: expect.any(String),
+      id: expect.any(String),
+      exp: expect.any(Number),
+      iat: expect.any(Number),
+      username: null
+    });
+  });
+
 
   afterAll(() => {
     pool.end();
