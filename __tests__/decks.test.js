@@ -87,6 +87,7 @@ describe('backend deck route tests', () => {
 
   it.only('#testing utls', async () => {
     const response = checkRules('standard', ['test cards for loop']);
+    console.log(response);
   });
 });
 
