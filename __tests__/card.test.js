@@ -43,10 +43,33 @@ describe('backend-express-template routes', () => {
     let card = await fetch('https://api.scryfall.com/cards/f295b713-1d6a-43fd-910d-fb35414bf58a');
     card = await card.json();
     const response = await agent.post('/api/v1/cards/addCard/1').send(card);
-    console.log(response.body);
     expect(response.status).toBe(200);
   });
 
+  it('get a cards details', async () => {
+    const [agent] = await registerAndLogin();
+    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(createDeck.status).toBe(200);
+    let card = await fetch('https://api.scryfall.com/cards/f295b713-1d6a-43fd-910d-fb35414bf58a');
+    card = await card.json();
+    const response = await agent.post('/api/v1/cards/addCard/1').send(card);
+    expect(response.status).toBe(200);
+    const getCard = await agent.get('/api/v1/cards/f295b713-1d6a-43fd-910d-fb35414bf58a');
+    expect(getCard.status).toBe(200);
+});
+
+
+  it('Should delete a card from a deck', async () => {
+    const [agent] = await registerAndLogin();
+    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(createDeck.status).toBe(200);
+    let card = await fetch('https://api.scryfall.com/cards/f295b713-1d6a-43fd-910d-fb35414bf58a');
+    card = await card.json();
+    const response = await agent.post('/api/v1/cards/addCard/1').send(card);
+    expect(response.status).toBe(200);
+    const deleteFromDeck = await agent.delete('/api/v1/cards/f295b713-1d6a-43fd-910d-fb35414bf58a/1');
+    expect(deleteFromDeck.status).toBe(200);
+  });
 
   afterAll(() => {
     pool.end();
