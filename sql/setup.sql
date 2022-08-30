@@ -76,5 +76,3 @@ VALUES
 ('1', 'test', '1', false),
 ('1', 'test2', '1', false),
 ('1', 'test', '1', false);
-
-
