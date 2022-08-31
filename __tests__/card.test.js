@@ -43,11 +43,14 @@ describe('backend-express-template routes', () => {
         name: 'Indebted Samurai'
       },
       {
+        name: 'Indebted Samurai'
+      },
+      {
         name: 'Isshin, two heavens as one'
       }
     ]);
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBe(3);
   });
 
   it('get a cards details', async () => {
