@@ -23,20 +23,20 @@ CREATE TABLE decks (
   FOREIGN KEY (uid) REFERENCES mtg_users(id)
 );
 
-CREATE TABLE mtg_cards (
-  card_id BIGINT GENERATED ALWAYS AS IDENTITY,
-  sk_id varchar not null PRIMARY KEY,
-  name TEXT NOT NULL,
-  type_line TEXT,
-  oracle_text TEXT,
-  image_uri TEXT,
-  mana_cost TEXT,
-  cmc TEXT,
-  colors TEXT,
-  legalities TEXT,
-  set_name TEXT,
-  prices TEXT
-);
+-- CREATE TABLE mtg_cards (
+--   card_id BIGINT GENERATED ALWAYS AS IDENTITY,
+--   sk_id varchar not null PRIMARY KEY,
+--   name TEXT NOT NULL,
+--   type_line TEXT,
+--   oracle_text TEXT,
+--   image_uri TEXT,
+--   mana_cost TEXT,
+--   cmc TEXT,
+--   colors TEXT,
+--   legalities TEXT, API
+--   set_name TEXT,
+--   prices TEXT
+-- );
 
 CREATE TABLE decks_cards (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
