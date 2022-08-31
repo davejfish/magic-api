@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const fetch = require('cross-fetch');
 const testCollection = require('../data/testCollection');
 
+jest.mock('../lib/services/cardService');
+
 const mockUser = {
   email: 'test@example.com',
   password: '123456',
@@ -95,12 +97,7 @@ describe('backend-express-template routes', () => {
     expect(createDeck.status).toBe(200);
     //works up to here
 
-    const postToApi = await fetch('https://api.scryfall.com/cards/collection', {
-      method: 'POST',
-      body: testCollection,
-    });
-
-    console.log('test ------>', postToApi);
+    
   });
 
   afterAll(() => {
