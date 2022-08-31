@@ -27,6 +27,7 @@ CREATE TABLE decks_cards (
   uid BIGINT NOT NULL,
   deck_id BIGINT NOT NULL,
   sk_id varchar NOT NULL,
+  image_uri TEXT,
   name text NOT NULL,
   sideboard BOOLEAN NOT NULL DEFAULT 'false',
   FOREIGN KEY (deck_id) REFERENCES decks(id)
