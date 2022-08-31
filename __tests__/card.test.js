@@ -3,7 +3,9 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const fetch = require('cross-fetch');
-const testCollection = require('../data/testCollection');
+
+
+// jest.mock('../lib/services/cardService');
 
 const mockUser = {
   email: 'test@example.com',
@@ -13,10 +15,7 @@ const mockUser = {
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
-  legal: true,
-  //add card names
-  //return ski_id
-  //add sk_ids to join table
+  legal: true
 };
 
 const registerAndLogin = async (props = {}) => {
@@ -37,19 +36,18 @@ describe('backend-express-template routes', () => {
     return setup(pool);
   });
 
-  it(`#POST /api/v1/cards/addcard should add a card to the db if it does not exist
-  and add the card to the junction table`, async () => {
+  it('#POST /api/v1/cards/add/:deckID should add a card to decks_cards', async () => {
     const [agent] = await registerAndLogin();
-    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-    expect(createDeck.status).toBe(200);
-    let card = await fetch(
-      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
-    );
-    card = await card.json();
-    const response = await agent
-      .post('/api/v1/cards/addCard/1')
-      .send({ card, sideboard: true });
+    const response = await agent.post('/api/v1/cards/add/1').send([
+      {
+        name: 'Indebted Samurai'
+      },
+      {
+        name: 'Isshin, two heavens as one'
+      }
+    ]);
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
   });
 
   it('get a cards details', async () => {
@@ -89,18 +87,13 @@ describe('backend-express-template routes', () => {
     expect(deleteFromDeck.status).toBe(200);
   });
 
-  it.only('#POST sending up a collection of cards returns an array of cards', async () => {
+  it('#POST sending up a collection of cards returns an array of cards', async () => {
     const [agent] = await registerAndLogin();
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
     //works up to here
 
-    const postToApi = await fetch('https://api.scryfall.com/cards/collection', {
-      method: 'POST',
-      body: testCollection,
-    });
-
-    console.log('test ------>', postToApi);
+    
   });
 
   afterAll(() => {
