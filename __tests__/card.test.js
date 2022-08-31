@@ -36,7 +36,7 @@ describe('backend-express-template routes', () => {
     return setup(pool);
   });
 
-  it.only('#POST /api/v1/cards/add/:deckID should add a card to decks_cards', async () => {
+  it('#POST /api/v1/cards/add/:deckID should add a card to decks_cards', async () => {
     const [agent] = await registerAndLogin();
     const response = await agent.post('/api/v1/cards/add/1').send([
       {
@@ -46,8 +46,8 @@ describe('backend-express-template routes', () => {
         name: 'Isshin, two heavens as one'
       }
     ]);
-    console.log('response is: ', response.body);
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
   });
 
   it('get a cards details', async () => {
