@@ -89,7 +89,7 @@ describe('backend-express-template routes', () => {
     expect(deleteFromDeck.status).toBe(200);
   });
 
-  it.only('#POST sending up a collection of cards returns an array of cards', async () => {
+  it('#POST sending up a collection of cards returns an array of cards', async () => {
     const [agent] = await registerAndLogin();
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
