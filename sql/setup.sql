@@ -36,3 +36,8 @@ INSERT INTO mtg_users
 (email, passwordhash)
 VALUES
 ('fish@test.com', '$2b$10$/XLQ2NtgPH0ZWknA46v44uXryhWfvZR4qXWgx70eNhc4kvMpTKXJK');
+
+INSERT INTO decks
+(uid, rule_set, name, legal)
+VALUES
+('1', 'standard', 'indebted samurai super deck', 'true');
