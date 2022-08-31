@@ -15,10 +15,7 @@ const mockUser = {
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
-  legal: true,
-  //add card names
-  //return ski_id
-  //add sk_ids to join table
+  legal: true
 };
 
 const registerAndLogin = async (props = {}) => {
@@ -44,7 +41,12 @@ describe('backend-express-template routes', () => {
     const response = await agent.post('/api/v1/cards/add/1').send([
       {
         name: 'Indebted Samurai'
-      }]);
+      },
+      {
+        name: 'Isshin, two heavens as one'
+      }
+    ]);
+    console.log('response is: ', response.body);
     expect(response.status).toBe(200);
   });
 
