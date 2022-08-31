@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const fetch = require('cross-fetch');
+const testCollection = require('../data/testCollection');
 
 const mockUser = {
   email: 'test@example.com',
@@ -13,6 +14,9 @@ const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
   legal: true,
+  //add card names
+  //return ski_id
+  //add sk_ids to join table
 };
 
 const registerAndLogin = async (props = {}) => {
@@ -83,6 +87,20 @@ describe('backend-express-template routes', () => {
       '/api/v1/cards/3bd81ae6-e628-447a-a36b-597e63ede295/1'
     );
     expect(deleteFromDeck.status).toBe(200);
+  });
+
+  it.only('#POST sending up a collection of cards returns an array of cards', async () => {
+    const [agent] = await registerAndLogin();
+    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(createDeck.status).toBe(200);
+    //works up to here
+
+    const postToApi = await fetch('https://api.scryfall.com/cards/collection', {
+      method: 'POST',
+      body: testCollection,
+    });
+
+    console.log('test ------>', postToApi);
   });
 
   afterAll(() => {
