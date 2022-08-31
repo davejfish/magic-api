@@ -42,7 +42,8 @@ describe('backend-express-template routes', () => {
     });
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      message: 'Successfully signed in'
+      message: 'Successfully signed in',
+      user: expect.any(String)
     });
   });
 

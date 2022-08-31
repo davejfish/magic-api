@@ -53,40 +53,21 @@ describe('backend-express-template routes', () => {
     expect(response.body.length).toBe(3);
   });
 
-  it('get a cards details', async () => {
-    const [agent] = await registerAndLogin();
-    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-    expect(createDeck.status).toBe(200);
-    let card = await fetch(
-      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
-    );
-    card = await card.json();
-    const response = await agent
-      .post('/api/v1/cards/addCard/1')
-      .send({ card, sideboard: true });
-    expect(response.status).toBe(200);
-    const getCard = await agent.get(
-      '/api/v1/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
-    );
-    expect(getCard.status).toBe(200);
-  });
-
   it('Should delete a card from a deck', async () => {
     const [agent] = await registerAndLogin();
-    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-    expect(createDeck.status).toBe(200);
-    let card = await fetch(
-      'https://api.scryfall.com/cards/3bd81ae6-e628-447a-a36b-597e63ede295'
-    );
-    card = await card.json();
-    const response = await agent
-      .post('/api/v1/cards/addCard/1')
-      .send({ card, sideboard: true });
-
+    const response = await agent.post('/api/v1/cards/add/1').send([
+      {
+        name: 'Indebted Samurai'
+      }
+    ]);
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(1);
+
     const deleteFromDeck = await agent.delete(
-      '/api/v1/cards/3bd81ae6-e628-447a-a36b-597e63ede295/1'
+      `/api/v1/cards/${response.body[0].sk_id}/${response.body[0].deck_id}`
     );
+    console.log(response.body);
+    console.log(response.body.deck_id);
     expect(deleteFromDeck.status).toBe(200);
   });
 

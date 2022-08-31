@@ -2,7 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const fetch = require('cross-fetch');
+// const fetch = require('cross-fetch');
 const checkRules = require('../lib/utils/utils.js');
 
 const mockUser = {
@@ -135,8 +135,23 @@ describe('backend deck route tests', () => {
 
   it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
-
     await agent.post('/api/v1/decks/create').send(testDeck);
+
+    let card = await fetch(
+      'https://api.scryfall.com/cards/35a236f7-f008-4eb8-91d9-31ea8589cf0c'
+    );
+    card = await card.json();
+    await agent
+      .post('/api/v1/cards/addCard/2')
+      .send({ card, sideboard: false });
+
+    card = await fetch(
+      'https://api.scryfall.com/cards/e5b2176d-8925-4474-9d3e-1c97192715fb'
+    );
+    card = await card.json();
+    await agent
+      .post('/api/v1/cards/addCard/2')
+      .send({ card, sideboard: false });
 
     const response = await agent.get('/api/v1/decks/decks-cards/2');
     expect(response.status).toBe(200);
