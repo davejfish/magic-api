@@ -2,7 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const fetch = require('cross-fetch');
+// const fetch = require('cross-fetch');
 const checkRules = require('../lib/utils/utils.js');
 
 
@@ -95,13 +95,6 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it('#testing utls', async () => {
-    const deck = { rule_set: 'standard', id: '1' };
-    const response = await checkRules(deck);
-    expect(response).toEqual({
-      message: 'Deck is legal.'
-    });
-  });
 
   it('#GET /api/v1/decks/user-decks should return 401 if not signed in', async () => {
     const response = await request(app).get('/api/v1/decks/user-decks');
@@ -133,16 +126,16 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it.only('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
+  it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
     const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    expect(deck.status).toBe(200);
 
-    const card = await agent.post(`/api/v1/card/add/${deck.id}`).send([{ id: '35a236f7-f008-4eb8-91d9-31ea8589cf0c' }, { id: 'e5b2176d-8925-4474-9d3e-1c97192715fb' }]);
-    expect(card.response).toBe(200);
+    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send([{ id: '35a236f7-f008-4eb8-91d9-31ea8589cf0c' }, { id: 'e5b2176d-8925-4474-9d3e-1c97192715fb' }]);
     
-
-    const response = await agent.get(`/api/v1/decks/decks-cards/${deck.id}`);
+    const response = await agent.get(`/api/v1/decks/decks-cards/${deck.body.id}`);
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
   });
 
   it('#PUT /api/v1/decks/:id updates a users deck', async () => {
