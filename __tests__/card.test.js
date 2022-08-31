@@ -49,7 +49,6 @@ describe('backend-express-template routes', () => {
     const response = await agent
       .post('/api/v1/cards/addCard/1')
       .send({ card, sideboard: true });
-    console.log('test ----->', response.body);
     expect(response.status).toBe(200);
   });
 
