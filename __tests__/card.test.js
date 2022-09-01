@@ -66,8 +66,6 @@ describe('backend-express-template routes', () => {
     const deleteFromDeck = await agent.delete(
       `/api/v1/cards/${response.body[0].sk_id}/${response.body[0].deck_id}`
     );
-    console.log(response.body);
-    console.log(response.body.deck_id);
     expect(deleteFromDeck.status).toBe(200);
   });
 
@@ -76,8 +74,31 @@ describe('backend-express-template routes', () => {
     const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(createDeck.status).toBe(200);
     //works up to here
+  });
 
-    
+  it.only('Should delete all cards from a deck', async () => {
+    const [agent] = await registerAndLogin();
+    const response = await agent.post('/api/v1/cards/add/1').send([
+      {
+        name: 'Indebted Samurai'
+      },
+      {
+        name: 'Indebted Samurai'
+      },
+      {
+        name: 'Indebted Samurai'
+      },
+      {
+        name: 'Indebted Samurai'
+      }
+    ]);
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(4);
+
+    const deleteFromDeck = await agent.delete(
+      `/api/v1/cards/${response.body[0].deck_id}`
+    );
+    expect(deleteFromDeck.status).toBe(200);
   });
 
   afterAll(() => {
