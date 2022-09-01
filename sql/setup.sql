@@ -18,7 +18,7 @@ CREATE TABLE decks (
   rule_set TEXT NOT NULL,
   name TEXT,
   card_name TEXT,
-  legal BOOLEAN NOT NULL,
+  legal BOOLEAN NOT NULL DEFAULT 'false',
   FOREIGN KEY (uid) REFERENCES mtg_users(id)
 );
 
