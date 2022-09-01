@@ -2,10 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const fetch = require('cross-fetch');
-
-
-// jest.mock('../lib/services/cardService');
 
 const mockUser = {
   email: 'test@example.com',
@@ -36,9 +32,10 @@ describe('backend-express-template routes', () => {
     return setup(pool);
   });
 
-  it('#POST /api/v1/cards/add/:deckID should add a card to decks_cards', async () => {
+  it('#POST /api/v1/cards/add/:deckID should add cards to decks_cards', async () => {
     const [agent] = await registerAndLogin();
-    const response = await agent.post('/api/v1/cards/add/1').send([
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    const response = await agent.post(`/api/v1/cards/add/${deck.body.id}`).send([
       {
         name: 'Indebted Samurai'
       },
@@ -55,7 +52,8 @@ describe('backend-express-template routes', () => {
 
   it('Should delete a card from a deck', async () => {
     const [agent] = await registerAndLogin();
-    const response = await agent.post('/api/v1/cards/add/1').send([
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    const response = await agent.post(`/api/v1/cards/add/${deck.body.id}`).send([
       {
         name: 'Indebted Samurai'
       }
@@ -69,16 +67,10 @@ describe('backend-express-template routes', () => {
     expect(deleteFromDeck.status).toBe(200);
   });
 
-  it('#POST sending up a collection of cards returns an array of cards', async () => {
+  it('Should delete all cards from a deck', async () => {
     const [agent] = await registerAndLogin();
-    const createDeck = await agent.post('/api/v1/decks/create').send(testDeck);
-    expect(createDeck.status).toBe(200);
-    //works up to here
-  });
-
-  it.only('Should delete all cards from a deck', async () => {
-    const [agent] = await registerAndLogin();
-    const response = await agent.post('/api/v1/cards/add/1').send([
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    const response = await agent.post(`/api/v1/cards/add/${deck.body.id}`).send([
       {
         name: 'Indebted Samurai'
       },
