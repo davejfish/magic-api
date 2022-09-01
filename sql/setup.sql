@@ -29,7 +29,7 @@ CREATE TABLE decks_cards (
   sk_id varchar NOT NULL,
   type_line TEXT,
   name text NOT NULL,
-  sideboard BOOLEAN NOT NULL DEFAULT 'false',
+  sideboard BOOLEAN NOT NULL,
   FOREIGN KEY (deck_id) REFERENCES decks(id)
 );
 
