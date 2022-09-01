@@ -38,7 +38,7 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  it.only('#testing utls', async () => {
+  it('#testing utls', async () => {
     const [agent] = await registerAndLogin();
     const deck = await agent.post('/api/v1/decks/create').send(testDeck);
     await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
