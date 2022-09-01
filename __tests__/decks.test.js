@@ -4,7 +4,6 @@ const request = require('supertest');
 const app = require('../lib/app');
 const { checkRules } = require('../lib/utils/utils.js');
 const { testCollection } = require('../data/testCollection.js');
-// const fetch = require('cross-fetch');
 
 const mockUser = {
   email: 'test@example.com',
@@ -20,12 +19,6 @@ const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
 };
-
-// const emptyDeck = {
-//   rule_set: 'standard',
-//   name: 'Copied from -',
-//   legal: true,
-// };
 
 const registerAndLogin = async (props = {}) => {
   const testUser = {
@@ -187,26 +180,6 @@ describe('backend deck route tests', () => {
 
     expect(response.status).toBe(403);
   });
-  
-  // it.only('#POST should copy a deck', async () => {
-  //   const [agent, user] = await registerAndLogin();
-  //   const deckToCopy = await agent.post('/api/v1/decks/create').send(testDeck);
-  //   expect(deckToCopy.status).toBe(200);
-  //   expect(deckToCopy.body).toEqual({
-  //     id: expect.any(String),
-  //     uid: user.id,
-  //     ...testDeck,
-  //   });
-  //   const copiedDeck = await agent.post('/api/v1/decks/create').send(emptyDeck);
-  //   expect(copiedDeck.status).toBe(200);
-
-
-  //   const copy = await agent.post(`/api/v1/decks/${deckToCopy.body.id}/${copiedDeck.body.id}`);
-  //   expect(copy.status).toBe(200);
-
-  // WIP
-  // });
-
 
   afterAll(() => {
     pool.end();
