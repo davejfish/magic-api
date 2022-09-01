@@ -18,6 +18,7 @@ const mockUser2 = {
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
+  legal: true,
 };
 
 const registerAndLogin = async (props = {}) => {
@@ -53,7 +54,6 @@ describe('backend deck route tests', () => {
     expect(response.body).toEqual({
       id: expect.any(String),
       uid: user.id,
-      legal: false,
       ...testDeck,
     });
   });
@@ -91,7 +91,7 @@ describe('backend deck route tests', () => {
       uid: user.id,
       name: expect.any(String),
       rule_set: 'standard',
-      legal: false,
+      legal: true,
     });
   });
 
@@ -128,7 +128,6 @@ describe('backend deck route tests', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       ...testDeck,
-      legal: false,
       id: '2',
       uid: expect.any(String),
     });
