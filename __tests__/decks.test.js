@@ -52,7 +52,6 @@ describe('backend deck route tests', () => {
     await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
     const response = await checkRules(deck.body);
     expect(response).toEqual([
-      { name: 'Snow-Covered Forest', quantity: '21' },
       { message: 'Only 60 cards allowed per deck.' },
     ]);
   });
@@ -135,7 +134,7 @@ describe('backend deck route tests', () => {
     });
   });
 
-  it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
+  it('#GET /api/v1/decks/deck-cards/:deckID gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
     const deck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(deck.status).toBe(200);
@@ -147,7 +146,7 @@ describe('backend deck route tests', () => {
     expect(response.body.length).toBe(2);
   });
 
-  it('#PUT /api/v1/decks/:id updates a users deck', async () => {
+  it('#PUT /api/v1/decks/:deckID updates a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
@@ -160,7 +159,7 @@ describe('backend deck route tests', () => {
     expect(response.body.name).toEqual('Ninja Deck');
   });
 
-  it('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
+  it('#DELETE /api/v1/decks/:deckID deletes a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
