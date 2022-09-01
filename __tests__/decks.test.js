@@ -3,7 +3,8 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 // const fetch = require('cross-fetch');
-const checkRules = require('../lib/utils/utils.js');
+const { checkRules } = require('../lib/utils/utils.js');
+const { testCollection } = require('../data/testCollection.js');
 
 
 
@@ -41,12 +42,12 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  it('#testing utls', async () => {
-    const deck = { rule_set: 'standard', id: '1' };
-    const response = await checkRules(deck);
-    expect(response).toEqual({
-      message: 'Deck is legal.'
-    });
+  it.only('#testing utls', async () => {
+    const [agent] = await registerAndLogin();
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
+    const response = await checkRules(deck.body);
+    expect(response).toEqual(200);
   });
 
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
@@ -70,6 +71,7 @@ describe('backend deck route tests', () => {
       message: 'You must be signed in to continue',
     });
   });
+
 
   it(`#GET /api/v1/decks/user-decks should return a list of decks for the user
     if they are signed in`, async () => {
