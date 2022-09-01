@@ -95,7 +95,6 @@ describe('backend deck route tests', () => {
     });
   });
 
-
   it('#GET /api/v1/decks/user-decks should return 401 if not signed in', async () => {
     const response = await request(app).get('/api/v1/decks/user-decks');
     expect(response.body).toEqual({
