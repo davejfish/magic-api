@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-// const fetch = require('cross-fetch');
 const { checkRules } = require('../lib/utils/utils.js');
 const { testCollection } = require('../data/testCollection.js');
 
@@ -19,13 +18,6 @@ const mockUser2 = {
 const testDeck = {
   rule_set: 'standard',
   name: 'SAMURAI DECK',
-  legal: true,
-};
-
-const emptyDeck = {
-  rule_set: 'standard',
-  name: 'Copied from -',
-  legal: true,
 };
 
 const registerAndLogin = async (props = {}) => {
@@ -46,12 +38,12 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  it('#testing utls', async () => {
-    const deck = { rule_set: 'standard', id: '1' };
-    const response = await checkRules(deck);
-    expect(response).toEqual({
-      message: 'Deck is legal.',
-    });
+  it.only('#testing utls', async () => {
+    const [agent] = await registerAndLogin();
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
+    const response = await checkRules(deck.body);
+    expect(response).toEqual(200);
   });
 
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
@@ -61,6 +53,7 @@ describe('backend deck route tests', () => {
     expect(response.body).toEqual({
       id: expect.any(String),
       uid: user.id,
+      legal: false,
       ...testDeck,
     });
   });
@@ -98,7 +91,7 @@ describe('backend deck route tests', () => {
       uid: user.id,
       name: expect.any(String),
       rule_set: 'standard',
-      legal: true,
+      legal: false,
     });
   });
 
@@ -135,12 +128,13 @@ describe('backend deck route tests', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       ...testDeck,
+      legal: false,
       id: '2',
       uid: expect.any(String),
     });
   });
 
-  it('#GET /api/v1/decks/deck-cards/:id gets a deck with cards', async () => {
+  it('#GET /api/v1/decks/deck-cards/:deckID gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
     await agent.post('/api/v1/decks/create').send(testDeck);
 
@@ -165,7 +159,7 @@ describe('backend deck route tests', () => {
     expect(response.body.cards.length).toBe(2);
   });
 
-  it('#PUT /api/v1/decks/:id updates a users deck', async () => {
+  it('#PUT /api/v1/decks/:deckID updates a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
@@ -178,7 +172,7 @@ describe('backend deck route tests', () => {
     expect(response.body.name).toEqual('Ninja Deck');
   });
 
-  it('#DELETE /api/v1/decks/:id deletes a users deck', async () => {
+  it('#DELETE /api/v1/decks/:deckID deletes a users deck', async () => {
     const [agent] = await registerAndLogin();
     const sendDeck = await agent.post('/api/v1/decks/create').send(testDeck);
     expect(sendDeck.status).toBe(200);
