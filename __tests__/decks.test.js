@@ -2,11 +2,9 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-// const fetch = require('cross-fetch');
 const { checkRules } = require('../lib/utils/utils.js');
 const { testCollection } = require('../data/testCollection.js');
-
-
+// const fetch = require('cross-fetch');
 
 const mockUser = {
   email: 'test@example.com',
@@ -24,11 +22,11 @@ const testDeck = {
   legal: true,
 };
 
-const emptyDeck = {
-  rule_set: 'standard',
-  name: 'Copied from -',
-  legal: true,
-};
+// const emptyDeck = {
+//   rule_set: 'standard',
+//   name: 'Copied from -',
+//   legal: true,
+// };
 
 const registerAndLogin = async (props = {}) => {
   const testUser = {
@@ -48,12 +46,15 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  it.only('#testing utls', async () => {
+  it('#testing utls', async () => {
     const [agent] = await registerAndLogin();
     const deck = await agent.post('/api/v1/decks/create').send(testDeck);
     await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
     const response = await checkRules(deck.body);
-    expect(response).toEqual(200);
+    expect(response).toEqual([
+      { name: 'Snow-Covered Forest', quantity: '21' },
+      { message: 'Only 60 cards allowed per deck.' },
+    ]);
   });
 
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {

@@ -18,7 +18,7 @@ CREATE TABLE decks (
   rule_set TEXT NOT NULL,
   name TEXT,
   card_name TEXT,
-  legal BOOLEAN,
+  legal BOOLEAN DEFAULT 'true',
   FOREIGN KEY (uid) REFERENCES mtg_users(id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE decks_cards (
   uid BIGINT NOT NULL,
   deck_id BIGINT NOT NULL,
   sk_id varchar NOT NULL,
-  image_uris TEXT,
+  type_line TEXT,
   name text NOT NULL,
   sideboard BOOLEAN NOT NULL DEFAULT 'false',
   FOREIGN KEY (deck_id) REFERENCES decks(id)
