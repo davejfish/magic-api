@@ -38,14 +38,12 @@ describe('backend deck route tests', () => {
     return setup(pool);
   });
 
-  it('#testing utls', async () => {
+  it.only('#testing utls', async () => {
     const [agent] = await registerAndLogin();
     const deck = await agent.post('/api/v1/decks/create').send(testDeck);
     await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
     const response = await checkRules(deck.body);
-    expect(response).toEqual([
-      { message: 'Only 60 cards allowed per deck.' },
-    ]);
+    expect(response).toEqual(200);
   });
 
   it('#POST /api/v1/decks/create should create a new deck for a user', async () => {
@@ -71,7 +69,6 @@ describe('backend deck route tests', () => {
     });
   });
 
-
   it(`#GET /api/v1/decks/user-decks should return a list of decks for the user
     if they are signed in`, async () => {
     const [agent, user] = await registerAndLogin();
@@ -84,7 +81,9 @@ describe('backend deck route tests', () => {
         .post('/api/v1/decks/create')
         .send({ ...testDeck, name: 'SUPER SAMURAI DECK' }),
     ]);
+
     const response = await agent.get('/api/v1/decks/user-decks');
+
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(3);
     expect(response.body[0]).toEqual({
@@ -96,6 +95,13 @@ describe('backend deck route tests', () => {
     });
   });
 
+  it('#testing utls', async () => {
+    const deck = { rule_set: 'standard', id: '1' };
+    const response = await checkRules(deck);
+    expect(response).toEqual({
+      message: 'Deck is legal.',
+    });
+  });
 
   it('#GET /api/v1/decks/user-decks should return 401 if not signed in', async () => {
     const response = await request(app).get('/api/v1/decks/user-decks');
@@ -130,14 +136,27 @@ describe('backend deck route tests', () => {
 
   it('#GET /api/v1/decks/deck-cards/:deckID gets a deck with cards', async () => {
     const [agent] = await registerAndLogin();
-    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
-    expect(deck.status).toBe(200);
+    await agent.post('/api/v1/decks/create').send(testDeck);
 
-    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send([{ id: '35a236f7-f008-4eb8-91d9-31ea8589cf0c' }, { id: 'e5b2176d-8925-4474-9d3e-1c97192715fb' }]);
-    
-    const response = await agent.get(`/api/v1/decks/decks-cards/${deck.body.id}`);
+    let card = await fetch(
+      'https://api.scryfall.com/cards/35a236f7-f008-4eb8-91d9-31ea8589cf0c'
+    );
+    card = await card.json();
+    await agent
+      .post('/api/v1/cards/addCard/2')
+      .send({ card, sideboard: false });
+
+    card = await fetch(
+      'https://api.scryfall.com/cards/e5b2176d-8925-4474-9d3e-1c97192715fb'
+    );
+    card = await card.json();
+    await agent
+      .post('/api/v1/cards/addCard/2')
+      .send({ card, sideboard: false });
+
+    const response = await agent.get('/api/v1/decks/decks-cards/2');
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(2);
+    expect(response.body.cards.length).toBe(2);
   });
 
   it('#PUT /api/v1/decks/:deckID updates a users deck', async () => {
@@ -181,15 +200,23 @@ describe('backend deck route tests', () => {
     expect(response.status).toBe(403);
   });
 
-  it('#GET /api/v1/decks/:deckID/legal should return the legality of a deck', async () => {
-    const [agent] = await registerAndLogin();
-    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
-    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
+  // it.only('#POST should copy a deck', async () => {
+  //   const [agent, user] = await registerAndLogin();
+  //   const deckToCopy = await agent.post('/api/v1/decks/create').send(testDeck);
+  //   expect(deckToCopy.status).toBe(200);
+  //   expect(deckToCopy.body).toEqual({
+  //     id: expect.any(String),
+  //     uid: user.id,
+  //     ...testDeck,
+  //   });
+  //   const copiedDeck = await agent.post('/api/v1/decks/create').send(emptyDeck);
+  //   expect(copiedDeck.status).toBe(200);
 
-    const response = await agent.get(`/api/v1/decks/${deck.body.id}/legal`);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([{ message: 'Only 60 cards allowed per deck.' }]);
-  });
+  //   const copy = await agent.post(`/api/v1/decks/${deckToCopy.body.id}/${copiedDeck.body.id}`);
+  //   expect(copy.status).toBe(200);
+
+  // WIP
+  // });
 
   afterAll(() => {
     pool.end();
