@@ -181,6 +181,16 @@ describe('backend deck route tests', () => {
     expect(response.status).toBe(403);
   });
 
+  it('#GET /api/v1/decks/:deckID/legal should return the legality of a deck', async () => {
+    const [agent] = await registerAndLogin();
+    const deck = await agent.post('/api/v1/decks/create').send(testDeck);
+    await agent.post(`/api/v1/cards/add/${deck.body.id}`).send(testCollection);
+
+    const response = await agent.get(`/api/v1/decks/${deck.body.id}/legal`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: 'Only 60 cards allowed per deck.' });
+  });
+
   afterAll(() => {
     pool.end();
   });
