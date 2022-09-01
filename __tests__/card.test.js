@@ -46,7 +46,6 @@ describe('backend-express-template routes', () => {
         name: 'Isshin, two heavens as one'
       }
     ]);
-    console.log('response is: ', response.body);
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(3);
   });
