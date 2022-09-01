@@ -188,7 +188,7 @@ describe('backend deck route tests', () => {
 
     const response = await agent.get(`/api/v1/decks/${deck.body.id}/legal`);
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'Only 60 cards allowed per deck.' });
+    expect(response.body).toEqual([{ message: 'Only 60 cards allowed per deck.' }]);
   });
 
   afterAll(() => {
