@@ -217,6 +217,6 @@ const checkRules = async ({ rule_set, id, legal }) => {
 };
 ```
 
-These are the main features to keep in mind when working with or expanding upon this backend. It is our  
-new functionality to the mtg community and that ultimately some small corners of that community might  
-find it useful.
+These are the main features to keep in mind when working with or expanding upon this backend. It is our
+hope that this project adds some small new functionality to the mtg community and that ultimately some
+small corners of that community might find it useful.
